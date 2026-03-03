@@ -59,6 +59,10 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Update ArgoCD application image tag
       env:
         TAG: ${{ github.ref_name }}
@@ -69,4 +73,4 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add helm/mcpcoder/values-prod.yaml
         git commit -m "chore: update image tag to ${TAG}"
-        git push origin HEAD:main
+        git push
