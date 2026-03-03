@@ -15,6 +15,12 @@ data:
     }
 
     http {
+        client_body_temp_path /tmp/client_body;
+        proxy_temp_path /tmp/proxy;
+        fastcgi_temp_path /tmp/fastcgi;
+        uwsgi_temp_path /tmp/uwsgi;
+        scgi_temp_path /tmp/scgi;
+
         lua_shared_dict tokens 1m;
 
         init_by_lua_block {
