@@ -18,7 +18,6 @@ Use this skill when:
 
 ## Related Skills
 
-- **`dotnet-local-tools`** - Managing local .NET tools with dotnet-tools.json
 - **`microsoft-extensions-configuration`** - Configuration validation patterns
 
 ---
@@ -58,11 +57,11 @@ The `.slnx` format is the modern XML-based solution file format introduced in .N
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/MyApp/MyApp.csproj" />
-    <Project Path="src/MyApp.Core/MyApp.Core.csproj" />
+    <Project Path="src/MyApp/MyApp.Api.csproj" />
+    <Project Path="src/MyApp.Domain/MyApp.Domain.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/MyApp.Tests/MyApp.Tests.csproj" />
+    <Project Path="tests/MyApp.UnitTests/MyApp.UnitTests.csproj" />
   </Folder>
 </Solution>
 ```
