@@ -23,7 +23,7 @@ spec:
               containerPort: 8080
               protocol: TCP
           command:
-            - openresty
+            - /usr/local/openresty/bin/openresty
             - -c
             - /etc/openresty/nginx.conf
             - -g
@@ -56,6 +56,8 @@ spec:
               readOnly: true
             - name: tmp
               mountPath: /tmp
+            - name: nginx-temp
+              mountPath: /usr/local/openresty/nginx
       volumes:
         - name: auth-config
           configMap:
@@ -64,4 +66,6 @@ spec:
           secret:
             secretName: {{ include "mcpcoder.authFullname" . }}-tokens
         - name: tmp
+          emptyDir: {}
+        - name: nginx-temp
           emptyDir: {}
