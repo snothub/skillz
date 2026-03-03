@@ -29,6 +29,7 @@ ingress:
   tls:
     enabled: true
     secretName: mcpcoder-tls
+    clusterIssuer: letsencrypt-prod
 
 auth:
   tokens:
