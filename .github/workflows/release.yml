@@ -6,7 +6,7 @@ on:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -58,3 +58,14 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Update ArgoCD application image tag
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          sed -i "s|tag: v.*|tag: ${TAG}|" helm/mcpcoder/values-prod.yaml
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add helm/mcpcoder/values-prod.yaml
+          git commit -m "chore: update image tag to ${TAG}"
+          git push origin HEAD:main

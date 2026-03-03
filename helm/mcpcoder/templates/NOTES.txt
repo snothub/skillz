@@ -1,0 +1,13 @@
+MCP Skills Server has been deployed!
+
+1. The server is accessible via Traefik at:
+   https://{{ .Values.ingress.host }}
+
+2. All requests require a valid Bearer token. Test with:
+   curl -H "Authorization: Bearer <token>" https://{{ .Values.ingress.host }}/health
+
+3. To add or rotate tokens, update the auth.tokens list in your values
+   and run:
+   helm upgrade {{ .Release.Name }} ./helm/mcpcoder
+
+4. Current replicas: {{ .Values.replicaCount }} (HPA {{ if .Values.hpa.enabled }}enabled{{ else }}disabled{{ end }})

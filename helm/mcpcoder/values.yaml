@@ -1,0 +1,52 @@
+image:
+  repository: ghcr.io/snothub/skillz
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+service:
+  type: ClusterIP
+  port: 3000
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+ingress:
+  host: mcpcoder.forteapps.net
+  entrypoint: websecure
+  tls:
+    enabled: true
+    secretName: mcpcoder-tls
+
+auth:
+  tokens:
+  - change-me-token-1
+  - change-me-token-2
+  image:
+    repository: openresty/openresty
+    tag: alpine
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi
+    limits:
+      cpu: 200m
+      memory: 64Mi
+
+skills:
+  dir: /app/skills
+
+nodeEnv: production
