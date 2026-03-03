@@ -1,0 +1,10 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "mcpcoder.fullname" . }}-auth
+  labels:
+    {{- include "mcpcoder.labels" . | nindent 4 }}
+spec:
+  forwardAuth:
+    address: http://{{ include "mcpcoder.authFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:8080/
+    trustForwardHeader: true

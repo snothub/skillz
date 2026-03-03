@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mcpcoder.authFullname" . }}-config
+  labels:
+    {{- include "mcpcoder.labels" . | nindent 4 }}
+data:
+  nginx.conf: |
+    worker_processes 1;
+    error_log /dev/stderr warn;
+    pid /tmp/nginx.pid;
+
+    events {
+        worker_connections 256;
+    }
+
+    http {
+        lua_shared_dict tokens 1m;
+
+        init_by_lua_block {
+            local function load_tokens()
+                local file = io.open("/etc/auth/tokens", "r")
+                if not file then
+                    ngx.log(ngx.ERR, "failed to open tokens file")
+                    return
+                end
+                local dict = ngx.shared.tokens
+                dict:flush_all()
+                for line in file:lines() do
+                    local token = line:match("^%s*(.-)%s*$")
+                    if token and #token > 0 then
+                        dict:set(token, true)
+                    end
+                end
+                file:close()
+            end
+            load_tokens()
+        }
+
+        server {
+            listen 8080;
+
+            location / {
+                access_by_lua_block {
+                    local auth_header = ngx.var.http_authorization
+                    if not auth_header then
+                        ngx.status = 401
+                        ngx.header["Content-Type"] = "application/json"
+                        ngx.say('{"error":"missing authorization header"}')
+                        return ngx.exit(401)
+                    end
+
+                    local token = auth_header:match("^Bearer%s+(.+)$")
+                    if not token then
+                        ngx.status = 401
+                        ngx.header["Content-Type"] = "application/json"
+                        ngx.say('{"error":"invalid authorization format"}')
+                        return ngx.exit(401)
+                    end
+
+                    local dict = ngx.shared.tokens
+                    if not dict:get(token) then
+                        ngx.status = 401
+                        ngx.header["Content-Type"] = "application/json"
+                        ngx.say('{"error":"invalid token"}')
+                        return ngx.exit(401)
+                    end
+
+                    ngx.status = 200
+                    ngx.say('{"status":"ok"}')
+                    return ngx.exit(200)
+                }
+            }
+
+            location /healthz {
+                return 200 'ok';
+                add_header Content-Type text/plain;
+            }
+        }
+    }
