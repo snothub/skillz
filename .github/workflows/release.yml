@@ -59,13 +59,15 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Update ArgoCD application image tag
+      - name: Update image tag in values-prod
         env:
           TAG: ${{ github.ref_name }}
         run: |
-          sed -i "s|tag: v.*|tag: ${TAG}|" helm/mcpcoder/values-prod.yaml
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout main
+          sed -i "s|tag: v.*|tag: ${TAG}|" helm/mcpcoder/values-prod.yaml
           git add helm/mcpcoder/values-prod.yaml
           git commit -m "chore: update image tag to ${TAG}"
-          git push origin HEAD:main
+          git push origin main
