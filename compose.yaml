@@ -1,0 +1,22 @@
+services:
+  mcp-skills-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      SKILLS_DIR: /app/skills
+    volumes:
+      # Mount local skills folder so changes reflect without rebuilding
+      - ./.claude/skills:/app/skills:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    restart: no

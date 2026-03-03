@@ -1,0 +1,19 @@
+# dependencies (reinstalled inside image)
+node_modules
+
+# test / dev artefacts
+**/*.test.ts
+**/*.spec.ts
+coverage
+.nyc_output
+
+# local env overrides
+.env
+.env.*
+!.env.example
+
+# editor / OS noise
+.DS_Store
+.idea
+.vscode
+*.log
