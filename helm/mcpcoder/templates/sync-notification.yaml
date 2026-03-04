@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-notification
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name }}-notification-pod
+      labels:
+        {{- include "app.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: slack-notification
+        image: curlimages/curl
+        command:
+        - curl
+        - '-X'
+        - POST
+        - '--data'
+        - '{"payload": "{{ .Release.Name }} {{ .Values.app.image.tag }} deployed successfully."}'
+        - 'https://hooks.slack.com/triggers/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'
+      restartPolicy: Never
+  backoffLimit: 2
