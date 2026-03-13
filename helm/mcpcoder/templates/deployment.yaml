@@ -13,6 +13,9 @@ spec:
       {{- include "mcpcoder.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        policies.forteapps.io/auth: {{ .Values.auth.enabled | quote }}
+        policies.forteapps.io/auth-token-secret-name: "{{ include "mcpcoder.authFullname" . }}-tokens"
       labels:
         {{- include "mcpcoder.selectorLabels" . | nindent 8 }}
     spec:

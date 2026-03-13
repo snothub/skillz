@@ -10,9 +10,6 @@ spec:
   routes:
     - match: Host(`{{ .Values.ingress.host }}`)
       kind: Rule
-      middlewares:
-        - name: {{ include "mcpcoder.fullname" . }}-auth
-          namespace: {{ .Release.Namespace }}
       services:
         - name: {{ include "mcpcoder.fullname" . }}
           port: {{ .Values.service.port }}

@@ -45,10 +45,3 @@ Auth verifier fullname
 {{- printf "%s-auth" (include "mcpcoder.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{/*
-Auth verifier selector labels
-*/}}
-{{- define "mcpcoder.authSelectorLabels" -}}
-app.kubernetes.io/name: {{ include "mcpcoder.name" . }}-auth
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
