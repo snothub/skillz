@@ -32,6 +32,7 @@ ingress:
     clusterIssuer: letsencrypt-prod
 
 auth:
+  enabled: true
   tokens:
   - d4f88f6d9292c10cc3e21c4aad56d2be485db532b54fe961d738e1137d247823
   image:
