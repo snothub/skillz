@@ -63,9 +63,10 @@ jobs:
       env:
         TAG: ${{ github.ref_name }}
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git clone https://github.com/snothub/super-potato helm
+        ssh-add - <<< "${{ secrets.HELM_DEPLOY_KEY }}"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git clone git@github.com:snothub/super-potato.git helm
         cd helm
         git fetch origin main
         git checkout main
