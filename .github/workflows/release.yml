@@ -76,7 +76,7 @@ jobs:
         git checkout main
         # Remove 'v' prefix from tag to match docker image tags (e.g., v1.1.1 -> 1.1.1)
         TAG_WITHOUT_V="${TAG#v}"
-        sed -i "s|tag: v.*|tag: ${TAG_WITHOUT_V}|" mcpcoder/values.yaml
+        sed -i "s|tag: .*|tag: ${TAG_WITHOUT_V}|" mcpcoder/values.yaml
         git add mcpcoder/values.yaml
         git commit -m "chore: update image tag to ${TAG_WITHOUT_V}"
         git push origin main
