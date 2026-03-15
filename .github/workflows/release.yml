@@ -70,7 +70,7 @@ jobs:
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git clone git@github.com:snothub/super-potato.git helm
+        git clone git@github.com:fortedigital/helm-values.git helm
         cd helm
         git fetch origin main
         git checkout main
